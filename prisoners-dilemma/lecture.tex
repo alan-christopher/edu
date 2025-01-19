@@ -1,0 +1,164 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[pdf]{beamer}
+\mode<presentation>{\usetheme{Dresden}}
+\usepackage{lmodern}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,listings,array,color,amsthm}
+
+\usepackage[noend]{algpseudocode}
+
+\usepackage{tikz}
+\usepackage{multicol}
+\usetikzlibrary{shapes,snakes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{math}
+
+%% For on-slide alerting of nodes
+\tikzstyle{alert} = [text=black, fill=blue!20, draw=black]
+\setbeamercolor{alerted text}{fg=blue}
+\tikzset{alerton/.code args={<#1>}{%
+  \only<#1>{\pgfkeysalso{alert}} % \pgfkeysalso doesn't change the path
+}}
+
+%% utils for removing uninteresting sections from the navbar
+%% https://tex.stackexchange.com/questions/317774/hide-section-from-sidebar
+\makeatletter
+\let\beamer@writeslidentry@miniframeson=\beamer@writeslidentry%
+\def\beamer@writeslidentry@miniframesoff{%
+  \expandafter\beamer@ifempty\expandafter{\beamer@framestartpage}{}% does not happen normally
+  {%else
+    % removed \addtocontents commands
+    \clearpage\beamer@notesactions%
+  }
+}
+\newcommand*{\miniframeson}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframeson}
+\newcommand*{\miniframesoff}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframesoff}
+\makeatother
+
+%% preamble
+\title{Prisoner's Dilemma}
+\subtitle{Theme and Variations}
+\author{A.C.}
+\date{\today}
+
+\AtBeginSection[]
+{
+  \miniframesoff
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection,hideothersubsections]
+  \end{frame}
+  \miniframeson
+}
+
+\definecolor{darkred}{rgb}{0.7,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{darkpurple}{rgb}{0.4, 0.0, 0.4}
+
+%% Code font settings
+\lstset{
+  showstringspaces=false,
+  basicstyle=\scriptsize\ttfamily,
+  commentstyle=\color{darkred},
+  stringstyle=\color{darkgreen},
+  keywordstyle=\bfseries\color{darkpurple},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start of Actual slides %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{The Prisoner's Dilemma}
+\subsection{Single Round}
+\begin{frame}{Nash Equilibrium}
+  We say that players in a non-cooperative game are in a \textbf{Nash Equilibrium}
+  if neither can improve their score by adopting a new strategy.
+  \begin{itemize}
+  \pause\item Players \emph{can} communicate. Their strategies are assumed transparent
+    to each other.
+  \pause\item Players \emph{cannot} cooperate. It's still a Nash Equilibrium if both
+    players changing strategy together yields improvement.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Prisoner's Dilemma}
+  % TODO: insert a 2x2 showing the Axelrod reward/punish matrix
+
+  % Notes:
+  % - Stage game
+  % - Optimal play: Defect
+  % - Nash Equilibrium
+  % - Opponent-independent
+\end{frame}
+
+\begin{frame}{Homo Economicus}
+  % TODO: insert am I the one that is so out of touch? meme but with models for
+    % out of touch and humans for are-wrong
+\end{frame}
+
+\subsection{Fixed, Finite Rounds}
+
+\begin{frame}{Iterated Prisoner's Dilemma}
+
+  What happens if we play several rounds of prisoner's dilemma? A tension
+  between developing good will (cooperating) and spending it (defecting)?
+
+  Simple rules:
+  \begin{itemize}
+  \item $N$ rounds of play.
+  \item Same rewards in every round.
+  \item Final score is sum of individual rounds.
+  \item Every player has perfect recall.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Rational Play}
+  \begin{itemize}
+  \item Final round reduces to plain PD;
+    \begin{itemize}
+      \item D-D
+    \end{itemize}
+  \pause\item Penultimate round reduces to plain PD, followed by D-D.
+    \begin{itemize}
+      \item D-D, D-D
+    \end{itemize}
+  \pause\item round before that reduces to plain PD, followed by D-D, D-D.
+    \begin{itemize}
+      \item D-D, D-D, D-D
+    \end{itemize}
+  \pause\item $\ldots$
+  \pause\item $\ldots$
+  \pause\item D-D,D-D,D-D,$\ldots$,D-D
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Greater Fools}
+  \begin{itemize}
+  \item Iterated PD still yields universal defection under optimal, rational play.
+  \pause\item Irrational partners could cooperate.
+  \begin{itemize}
+    \item We might want to (sometimes) cooperate as well, depending on partner.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Indefinite Rounds}
+
+\section{Axelrod's Tournament}
+
+
+\section{Theories of Single-Round Cooperation}
+\begin{frame}{Super-Rationality}
+\end{frame}
+
+\begin{frame}{Mutual Interest}
+\end{frame}
+
+\end{document}
