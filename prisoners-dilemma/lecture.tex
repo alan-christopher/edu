@@ -98,8 +98,9 @@
 \end{frame}
 
 \begin{frame}{Homo Economicus}
-  % TODO: insert am I the one that is so out of touch? meme but with models for
-    % out of touch and humans for are-wrong
+  \begin{center}
+    \includegraphics[scale=0.20]{skinner_homo_economicus.jpg}
+  \end{center}
 \end{frame}
 
 \subsection{Fixed, Finite Rounds}
@@ -112,7 +113,7 @@
   Simple rules:
   \begin{itemize}
   \item $N$ rounds of play.
-  \item Same rewards in every round.
+  \item Same reward-space in every round.
   \item Final score is sum of individual rounds.
   \item Every player has perfect recall.
   \end{itemize}
@@ -150,17 +151,71 @@
 
 
 \subsection{Infinite Rounds}
-\begin{frame}{Rules}
+\begin{frame}{Infinite Round Prisoner's Dilemma}
+  What happens if we play forever?
+
+  \begin{itemize}
+  \item $\infty$ rounds of play.
+  \item Same reward-space in every round.
+  \item Every player has perfect recall.
+  \item Final score is the \emph{discounted} sum of individual rounds.
+    \begin{itemize}
+    \item $s = \sum \gamma^n s_n$ for a fixed discount factor $\gamma \in [0, 1)$
+    \pause\item Encodes a bird-in-the-hand sensibility, or stochastic early stopping
+    \pause\item Also, it makes the sum converge.
+    \end{itemize}
+  \end{itemize}
 \end{frame}
+
 \begin{frame}{Defect Always}
+  \begin{itemize}
+    \item Let player A plan to always defect.
+    \pause\item Player B obviously has no incentive to cooperate, will also plan to defect.
+    \pause\item By symmetry, A also has no incentive to cooperate.
+  \end{itemize}\pause
+ 
+  Defect-always is still \emph{an} equilibrium.
 \end{frame}
+
 \begin{frame}{Grim Trigger}
+  \begin{itemize}
+    \item Let players A and B plan to cooperate until defect.
+    \begin{itemize}
+      \item After first defection, each player plans to revert to defect-always.
+    \end{itemize}
+    \pause\item First defector scores a C-D bonus, but all future rounds will be D-D.
+    \pause\item If $\gamma$ is large enough, nobody will ever want to defect.
+    \begin{itemize}
+      \item Can apply OSDP if more rigor is desired.
+    \end{itemize}
+  \end{itemize}
+
+  \pause Grim Trigger is an always-cooperating equilibrium.
 \end{frame}
+
 \begin{frame}{Credibility}
+  Cooperation in $\infty$-PD possible only with credible retaliation.
+
+  \pause
+  \begin{itemize}
+  \item Strategies are immutable.
+  \item Strategies are published.
+  \end{itemize}
+
+  \pause
+  How realistic is that, anyways?
 \end{frame}
+
 \begin{frame}{Credibility II: Roko's Basilisk}
+  \begin{center}
+    \includegraphics[scale=0.25]{basilisk.jpg}
+  \end{center}
 \end{frame}
-\begin{frame}{Credibility III: Nuclear Doctrine}
+
+\begin{frame}{Credibility III: Declaratory Strategy}
+  \begin{center}
+    \includegraphics[scale=0.2]{npr_title_page_2022.png}
+  \end{center}
 \end{frame}
 
 \section{Axelrod's Tournament}
@@ -184,13 +239,36 @@
 
 \subsection{Noisy PD}
 \begin{frame}{Mixed Signals}
+  Problem variant: Cooperate/Defect decision is randomly flipped with some probability $p$.\newline
+
+  What happens?
 \end{frame}
 \begin{frame}{TFT}
-\end{frame}
-\begin{frame}{TF2T}
+  C-C\pause, C-C\pause, C-C\pause, \textcolor{darkred}{D}-C\pause, C-D\pause,D-C\pause,$\ldots$\pause
+
+  \begin{itemize}
+  \item Cooperate-then-defect chain continues until an error or error(s) puts us into C-C again.
+    \pause
+  \item Harder to fall out of the non-cooperation loop than into it.
+  \end{itemize}
 \end{frame}
 
-\section{Theories of Single-Round Cooperation}
+\begin{frame}{TF2T}
+  Simple robustification strategy: retaliate only on two defects:\pause
+  
+  C-C\pause, C-C\pause, C-C\pause, \textcolor{darkred}{D}-C\pause, C-C\pause, C-C\pause,$\ldots$
+
+  \begin{itemize}
+  \item Very difficult to fall into accidental conflict.
+    \pause
+  \item No harder to fall out of it.
+    \pause
+  \item Can be exploited by ``predatory'' strategies.
+  \end{itemize}
+  
+\end{frame}
+
+\section{Single-Round Cooperation}
 \begin{frame}{Super-Rationality}
 \end{frame}
 
