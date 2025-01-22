@@ -80,21 +80,28 @@
   We say that players in a non-cooperative game are in a \textbf{Nash Equilibrium}
   if neither can improve their score by adopting a new strategy.
   \begin{itemize}
-  \pause\item Players \emph{can} communicate. Their strategies are assumed transparent
-    to each other.
-  \pause\item Players \emph{cannot} cooperate. It's still a Nash Equilibrium if both
-    players changing strategy together yields improvement.
+  \pause\item Players can communicate. Their strategies are assumed transparent
+    to each other (e.g., by declaration).
+  \pause\item Players needn't cooperate. It's still a Nash Equilibrium if both
+    players changing strategy \emph{together} yields improvement.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Prisoner's Dilemma}
-  % TODO: insert a 2x2 showing the Axelrod reward/punish matrix
 
-  % Notes:
-  % - Stage game
-  % - Optimal play: Defect
-  % - Nash Equilibrium
-  % - Opponent-independent
+  \begin{center}
+    \begin{tabular}{r|c|c}
+              & Cooperate & Defect \\ \hline
+    Cooperate & $3,3$     & $0,5$  \\ \hline
+    Defect    & $5,0$     & $1,1$  \\ 
+    \end{tabular}
+  \end{center}
+
+  \begin{itemize}
+  \item Played as a \textbf{stage game}; both players act at the same time
+  \pause\item Nash equilibrium on D-D
+  \pause\item Optimal move is D, independent of opponent choice
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Homo Economicus}
@@ -199,6 +206,9 @@
   \pause
   \begin{itemize}
   \item Strategies are immutable.
+    \begin{itemize}
+    \item Or at  least, we have no incentive to mutate our strategies.
+    \end{itemize}
   \item Strategies are published.
   \end{itemize}
 
@@ -221,20 +231,102 @@
 \section{Axelrod's Tournament}
 \subsection{Axelrod's Tournament}
 \begin{frame}{Tournament Format}
+  Practical experiment run in 1980 by Robert Axelrod.
+
+  \begin{itemize}
+  \item Field of 14 prisoner's dilemma actors.
+  \item Opponent strategy was \emph{not} announced.
+    \begin{itemize}
+    \item A few actors tried to infer opposing strategies from observed play.
+    \end{itemize}
+  \item Each actor plays every other actor, plus a \texttt{Random} round and a mirror round.
+    \begin{itemize}
+    \item 200 round iterated PD per matchup
+    \end{itemize}
+  \item Actor with the highest average score wins.
+  \end{itemize}
 \end{frame}
-\begin{frame}{Tit-for-Tat}
+
+\begin{frame}{DOWNING}
+  \begin{itemize}
+  \item Probably most sophisticated entrant.
+  \pause\item Maintains a belief score that cooperation will be punished
+    \begin{itemize}
+    \item Defects if it believes it can get away with it.
+    \item Cooperates otherwise
+    \end{itemize}
+  \pause\item Defects for first two rounds (minimum), to discover if it can extort
+  \pause\item Rank 10 with an average score of 391.
+  \end{itemize}
 \end{frame}
+
 \begin{frame}{Grim Trigger}
+  \begin{center}
+    \begin{algorithmic}
+      \Procedure{Friedman}{\text{history}}
+      \If{$D \in \text{history}$}
+        \State \Return D
+      \EndIf
+      \State \Return C
+      \EndProcedure  
+    \end{algorithmic}
+  \end{center}
+
+  \begin{itemize}
+  \item Co-operates well with other ``Nice'' strategies.
+    \pause\item Over-defends itself against extortion strategies.
+    \pause\item Rank 7 with an average score of 473.
+    \pause\item Scores poorly without the benefit of a declaratory strategy.
+  \end{itemize}
 \end{frame}
-\begin{frame}{Win-Stay, Lose-Switch}
+
+\begin{frame}{Tit-for-Tat}
+  \begin{center}
+    \begin{algorithmic}
+      \Procedure{TitForTat}{\text{history}}
+      \If{\text{history}[-1] = D}
+        \State \Return D
+      \EndIf
+      \State \Return C
+      \EndProcedure  
+    \end{algorithmic}
+  \end{center}
+
+  \begin{itemize}
+  \item Co-operates well with other ``Nice'' strategies.
+  \pause\item Effectively defends itself against extortion strategies.
+  \pause\item Won Axelrod's tournament with an average score of 504.
+  \end{itemize}
 \end{frame}
+
 \begin{frame}{Tournament Results}
+  The key features of good performance in Axelrod's tournament were
+
+  \begin{enumerate}
+  \item Niceness: early cooperation paid enormous dividends.
+  \item Forgiveness: reverting to a cooperative posture allowed ``resets'' after a limited defection.
+  \end{enumerate}
+
+  Obvious question: why is this so out of line with our theoretical,
+  defection-happy discussions of PD?
 \end{frame}
-\begin{frame}{Objective Re-alignment}
-\end{frame}
+
 \begin{frame}{Founder Effects}
+  Axelrod's tournament took place within a context, or meta-game.\pause\newline
+
+  Huge ``nice'' population (8 of 12 strategies) reinforced itself, out-competing
+  extortionist strategies. \pause\newline
+
+  Nice, forgiving population produces a \textbf{founder effect}.
 \end{frame}
+
 \begin{frame}{The Red Queen}
+  \begin{center}
+    \includegraphics[scale=0.25]{red_queen.jpg}
+  \end{center}
+  
+  The goal of Axelrod's tournament is not to maximize score, it's to maximize
+  probability of winning (or surviving). 
 \end{frame}
 
 \subsection{Noisy PD}
@@ -270,9 +362,32 @@
 
 \section{Single-Round Cooperation}
 \begin{frame}{Super-Rationality}
+  \begin{center}
+    \includegraphics[scale=0.3]{vizzini.jpg}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Mutual Interest}
+  \[ R(\text{player}) \rightarrow R(\text{player}) + \alpha R(\text{other}) \]
+
+  \begin{itemize}
+  \item For a sufficiently large $\alpha$, cooperation becomes obvious.\pause
+  \item \emph{Common interest is common}.
+    \begin{itemize}
+      See, e.g., kin selection.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\miniframesoff
+\section*{}
+
+\begin{frame}{Fin}
+  The source for this presentation is hosted at
+\url{https://github.com/alan-christopher/edu}.\newline
+
+  Questions?
 \end{frame}
 
 \end{document}
