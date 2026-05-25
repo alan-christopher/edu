@@ -85,7 +85,7 @@ sorting=ynt,
 \subsection{Kepler Theory}
 \begin{frame}{Conic Perfection}
   \only<1>{
-    \[ \ddot{r} = \frac{\mu}{r^2} \]
+    \[ \ddot{R} = \frac{\mu}{r^2} \]
   }
   \only<2>{
   \begin{center}
@@ -143,7 +143,7 @@ sorting=ynt,
 \subsection{Mean Element Theories}
 
 \begin{frame}{Perturbation: Non-Sphericity}
-  \[ \ddot{r} = \ddot{r}_\text{2B} + \ddot{r}_\text{PM} + \alert{\ddot{R}_\text{NS}} \]
+  \[ \ddot{R} = \ddot{R}_\text{2B} + \alert{\ddot{R}_\text{NS}} \]
   \begin{itemize}
   \item $\ddot{R}_\text{2B}$ uses point-mass equations
     \begin{itemize}
@@ -152,15 +152,15 @@ sorting=ynt,
     \end{itemize}
   \item Earth is neither
     \begin{itemize}
-    \item Tidal forces (order meters)
     \item Centrifugal forces (order kilometers)
+    \item Tidal forces (order meters)
     \end{itemize}
+  \item Notable for causing nodal precession.
   \end{itemize}
 \end{frame}
 
-
 \begin{frame}{Perturbation: Drag}
-  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{PM} + \ddot{R}_\text{NS}  + \ddot{R}_\text{IO} + \alert{\ddot{R}_\text{D}} \]
+  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{NS} + \alert{\ddot{R}_\text{D}} \]
 
   \begin{itemize}
   \item Drag equation: $F_\text{D} = \frac{1}{2}\rho v^2 C_\text{D} A$
@@ -180,94 +180,77 @@ sorting=ynt,
 
 
 \begin{frame}{Perturbation: et cetera}
-  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{PM} + \ddot{R}_\text{NS}  + \ddot{R}_\text{IO} + \alert{\ddot{R}_\text{D}} \]
-
+  We've only scratched the surface.
   \begin{itemize}
-  \item Drag equation: $F_\text{D} = \frac{1}{2}\rho v^2 C_\text{D} A$
-  \item Scales by
+  \item Third bodies (esp. sun, moon)
+  \item Tidal forces (solid and not)
+  \item Solar radiation pressure (esp. HAMR)
+  \item Knocke rediffusion
+  \item Relativistic corrections
     \begin{itemize}
-    \item Object shape and orientation ($C_\text{D}, A$).
-    \item Square of object velocity $v^2$.
-    \item Atmospheric density $\rho$, drops exponentially with altitude.
+    \item Schwarzschild
+    \item Lense-Thirring
+    \item De Sitter
     \end{itemize}
-  \item LEO objects (altitude $< 2000$ km) are low and fast
-    \begin{itemize}
-    \item experience non-negligible drag
-    \end{itemize}
-  \item Bonus: non-periodic and non-conservative.
   \end{itemize}
 \end{frame}
 
 \begin{frame}{Osculating Elements}
-  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{PM} + \ddot{R}_\text{NS}  + \ddot{R}_\text{IO} + \ddot{R}_\text{D} + \alert{\ddot{R}_\text{SRP}}\]
+  Perturbed orbits will \emph{not} be ellipses. Can we pretend?
+  \pause
 
-  \begin{itemize}
-  \item $\gamma := \sqrt{\frac{c^2}{c^2 - v^2}}$
-  \item $ p = \gamma m v$
-  \item photons: $m\rightarrow0, \gamma \rightarrow \infty $
-    \begin{itemize}
-    \item $p \rightarrow ?$
-    \item God's math: $ p = \frac{h}{\lambda} $
-    \end{itemize}
-  \item Absorbing and emitting light imparts momentum
-    \begin{itemize}
-    \item Sunlight never stops: SRP
-    \item Most impactful on higher altitude orbits
-    \item Non-periodic and non-conservative
-    \end{itemize}
-  \end{itemize}
+  \begin{center}
+  \includegraphics[scale=0.36]{images/OsculatingElements.png}
+  \end{center}
+
+  \pause
+  Yes, but\ldots
 \end{frame}
 
 \begin{frame}{Mean Elements}
-  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{PM} + \ddot{R}_\text{NS}  + \ddot{R}_\text{IO} + \ddot{R}_\text{D} + \alert{\ddot{R}_\text{SRP}}\]
 
-  \begin{itemize}
-  \item $\gamma := \sqrt{\frac{c^2}{c^2 - v^2}}$
-  \item $ p = \gamma m v$
-  \item photons: $m\rightarrow0, \gamma \rightarrow \infty $
-    \begin{itemize}
-    \item $p \rightarrow ?$
-    \item God's math: $ p = \frac{h}{\lambda} $
-    \end{itemize}
-  \item Absorbing and emitting light imparts momentum
-    \begin{itemize}
-    \item Sunlight never stops: SRP
-    \item Most impactful on higher altitude orbits
-    \item Non-periodic and non-conservative
-    \end{itemize}
-  \end{itemize}
+
+  \begin{center}
+    \includegraphics[scale=0.6]{images/SecularPeriodic.png}
+  \end{center}
+  
+  Could we ``average'' the high-frequency perturbations away somehow?
 \end{frame}
 
 
 \begin{frame}{SGP4 and TLEs}
-  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{PM} + \ddot{R}_\text{NS}  + \ddot{R}_\text{IO} + \ddot{R}_\text{D} + \alert{\ddot{R}_\text{SRP}}\]
-
-  \begin{itemize}
-  \item $\gamma := \sqrt{\frac{c^2}{c^2 - v^2}}$
-  \item $ p = \gamma m v$
-  \item photons: $m\rightarrow0, \gamma \rightarrow \infty $
-    \begin{itemize}
-    \item $p \rightarrow ?$
-    \item God's math: $ p = \frac{h}{\lambda} $
-    \end{itemize}
-  \item Absorbing and emitting light imparts momentum
-    \begin{itemize}
-    \item Sunlight never stops: SRP
-    \item Most impactful on higher altitude orbits
-    \item Non-periodic and non-conservative
-    \end{itemize}
-  \end{itemize}
+  \begin{center}
+    \includegraphics[scale=0.5]{images/tle_fmt.png}
+  \end{center}
 \end{frame}
 
 \subsection{Limitations}
 
-\begin{frame}{Inaccuracy I}
+\begin{frame}{Propagation Error}
+  \[ \ddot{R}_\text{SGP4} = \ddot{R}_\text{2B} + \ddot{R}_\text{NS} + \ddot{R}_\text{D} + \ddot{R}_\text{sun} + \ddot{R}_\text{moon}\]
+
+  \begin{itemize}
+  \item SGP4 catches only the biggest perturbations.
+  \item Liable to accumulate kilometers of error within an orbital period.
+  \end{itemize}  
 \end{frame}
 
-\begin{frame}{Inaccuracy II}
+\begin{frame}{Error at Epoch}
+  \begin{center}
+    \includegraphics[scale=0.32]{images/EpochError.png}
+  \end{center}
 \end{frame}
 
-\begin{frame}{Imprecision}
+\begin{frame}{Precision}
+
+  \only<1>{
+    All models are wrong. Can we get estimates on uncertainty? Perhaps a covariance matrix?
+  }
+  \only<2>{
+  \begin{center}
+    \includegraphics[scale=1.0]{images/404_Symbol.png}
+  \end{center}
+  }
 \end{frame}
 
 \section{TLE Differencing}
