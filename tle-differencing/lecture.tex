@@ -1,0 +1,423 @@
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[pdf]{beamer}
+\mode<presentation>{\usetheme{Dresden}}
+\usepackage{lmodern}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,listings,array,color,amsthm}
+\usepackage{multirow}
+
+\usepackage[noend]{algpseudocode}
+
+\usepackage[
+backend=biber,
+sorting=ynt,
+]{biblatex}
+\addbibresource{lecture.bib}
+
+\usepackage{tikz}
+\usepackage{multicol}
+\usetikzlibrary{shapes,snakes}
+\usetikzlibrary{positioning}
+\usetikzlibrary{arrows}
+\usetikzlibrary{fit}
+\usetikzlibrary{math}
+
+%% For on-slide alerting of nodes
+\tikzstyle{alert} = [text=black, fill=blue!20, draw=black]
+\setbeamercolor{alerted text}{fg=blue}
+\tikzset{alerton/.code args={<#1>}{%
+  \only<#1>{\pgfkeysalso{alert}} % \pgfkeysalso doesn't change the path
+}}
+
+%% utils for removing uninteresting sections from the navbar
+%% https://tex.stackexchange.com/questions/317774/hide-section-from-sidebar
+\makeatletter
+\let\beamer@writeslidentry@miniframeson=\beamer@writeslidentry%
+\def\beamer@writeslidentry@miniframesoff{%
+  \expandafter\beamer@ifempty\expandafter{\beamer@framestartpage}{}% does not happen normally
+  {%else
+    % removed \addtocontents commands
+    \clearpage\beamer@notesactions%
+  }
+}
+\newcommand*{\miniframeson}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframeson}
+\newcommand*{\miniframesoff}{\let\beamer@writeslidentry=\beamer@writeslidentry@miniframesoff}
+\makeatother
+
+%% preamble
+\title{TLE Differencing}
+\subtitle{Post Hoc Uncertainty Estimation}
+\author{A.C.}
+\date{\today}
+
+\AtBeginSection[]
+{
+  \miniframesoff
+  \begin{frame}{Outline}
+    \tableofcontents[currentsection,hideothersubsections]
+  \end{frame}
+  \miniframeson
+}
+
+\definecolor{darkred}{rgb}{0.7,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+\definecolor{darkpurple}{rgb}{0.4, 0.0, 0.4}
+
+%% Code font settings
+\lstset{
+  showstringspaces=false,
+  basicstyle=\scriptsize\ttfamily,
+  commentstyle=\color{darkred},
+  stringstyle=\color{darkgreen},
+  keywordstyle=\bfseries\color{darkpurple},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start of Actual slides %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{TLE Primer}
+\subsection{Kepler Theory}
+\begin{frame}{Conic Perfection}
+  \only<1>{
+    \[ \ddot{R} = \frac{\mu}{r^2} \]
+  }
+  \only<2>{
+  \begin{center}
+    \includegraphics[scale=0.4]{images/OrbitalEccentricityDemo.jpg}
+  \end{center}
+  }
+\end{frame}
+
+\begin{frame}{Kepler Elements}
+
+  \begin{columns}[T] % align columns
+
+    % Left Side
+    \begin{column}{.48\textwidth}
+      \includegraphics[scale=0.18]{images/ClassicalElements.png}
+    \end{column}%
+    \hfill%
+
+    % Right Side
+    \begin{column}{.48\textwidth}
+
+      \begin{center}
+      \begin{tabular}{c|c}
+
+        Element & Function \\
+        \hline\hline
+
+        $i$ & \multirow{3}{*}{Orientation} \\
+        $\Omega$ \\ 
+        $\omega$ \\ \hline
+        $e$ & \multirow{2}{*}{Shape} \\
+        $a$   \\ \hline
+        $\nu$ & \multirow{1}{*}{Position} \\
+      \end{tabular}
+      \end{center}
+    \end{column}%
+  \end{columns}
+  \begin{center}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}{Kepler and Euler}
+
+  \begin{center}
+    \includegraphics[scale=0.25]{images/OrbitAngles.png}
+  \end{center}
+
+  Kepler elements result in busy diagrams, but can be quite handy. E.g., $i$ and
+  $\Omega$ directly define the direction of orbital momentum. 
+  
+\end{frame}
+
+
+\subsection{Mean Element Theories}
+
+\begin{frame}{Perturbation: Non-Sphericity}
+  \[ \ddot{R} = \ddot{R}_\text{2B} + \alert{\ddot{R}_\text{NS}} \]
+  \begin{itemize}
+  \item $\ddot{R}_\text{2B}$ uses point-mass equations
+    \begin{itemize}
+    \item Works for points
+    \item Works for spheres (shell theorem)
+    \end{itemize}
+  \item Earth is neither
+    \begin{itemize}
+    \item Centrifugal forces (order kilometers)
+    \item Tidal forces (order meters)
+    \end{itemize}
+  \item Notable for causing nodal precession.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Perturbation: Drag}
+  \[ \ddot{R} = \ddot{R}_\text{2B} + \ddot{R}_\text{NS} + \alert{\ddot{R}_\text{D}} \]
+
+  \begin{itemize}
+  \item Drag equation: $F_\text{D} = \frac{1}{2}\rho v^2 C_\text{D} A$
+  \item Scales by
+    \begin{itemize}
+    \item Object shape and orientation ($C_\text{D}, A$).
+    \item Square of object velocity $v^2$.
+    \item Atmospheric density $\rho$, drops exponentially with altitude.
+    \end{itemize}
+  \item LEO objects (altitude $< 2000$ km) are low and fast
+    \begin{itemize}
+    \item experience non-negligible drag
+    \end{itemize}
+  \item Bonus: non-periodic and non-conservative.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Perturbation: et cetera}
+  We've only scratched the surface.
+  \begin{itemize}
+  \item Third bodies (esp. sun, moon)
+  \item Tidal forces (solid and not)
+  \item Solar radiation pressure (esp. HAMR)
+  \item Knocke rediffusion
+  \item Relativistic corrections
+    \begin{itemize}
+    \item Schwarzschild
+    \item Lense-Thirring
+    \item De Sitter
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Osculating Elements}
+  Perturbed orbits will \emph{not} be ellipses. Can we pretend?
+  \pause
+
+  \begin{center}
+  \includegraphics[scale=0.36]{images/OsculatingElements.png}
+  \end{center}
+
+  \pause
+  Yes, but\ldots
+\end{frame}
+
+\begin{frame}{Mean Elements}
+
+
+  \begin{center}
+    \includegraphics[scale=0.6]{images/SecularPeriodic.png}
+  \end{center}
+  
+  Could we ``average'' the high-frequency perturbations away somehow?
+\end{frame}
+
+
+\begin{frame}{SGP4 and TLEs}
+  \begin{center}
+    \includegraphics[scale=0.5]{images/tle_fmt.png}
+  \end{center}
+\end{frame}
+
+\subsection{Limitations}
+
+\begin{frame}{Propagation Error}
+  \[ \ddot{R}_\text{SGP4} = \ddot{R}_\text{2B} + \ddot{R}_\text{NS} + \ddot{R}_\text{D} + \ddot{R}_\text{sun} + \ddot{R}_\text{moon}\]
+
+  \begin{itemize}
+  \item SGP4 catches only the biggest perturbations.
+  \item Liable to accumulate kilometers of error within an orbital period.
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}{Error at Epoch}
+  \begin{center}
+    \includegraphics[scale=0.32]{images/EpochError.png}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Precision}
+
+  \only<1>{
+    All models are wrong. Can we get estimates on uncertainty? Perhaps a covariance matrix?
+  }
+  \only<2>{
+  \begin{center}
+    \includegraphics[scale=1.0]{images/404_Symbol.png}
+  \end{center}
+  }
+\end{frame}
+
+\section{TLE Differencing}
+\subsection{General Approach}
+
+\begin{frame}{Differencing}
+  \begin{center}
+    \includegraphics[scale=0.32]{images/fig1.png}
+  \end{center}
+
+  \begin{enumerate}
+    \only<1>{\item[1.] Select an RSO's TLE history to examine.}
+    \only<2>{\item[2.] Assume residuals $\epsilon$ are consistently distributed
+      over an \emph{Analysis Window}.}
+    \only<3>{\item[3.] Choose a \emph{Propagation Window} over which SGP4 should
+      be ``good enough''.}
+    \only<4>{\item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.}
+    \only<5>{\item[5a.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.}
+    \only<5>{\item[5b.] Compute covariance statistics from gathered samples.}
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Differencing Recapitulated}
+  \begin{enumerate}
+    \item[1.] Select an RSO's TLE history to examine.    
+    \item[2.] Assume residuals $\epsilon$ are consistently distributed
+      over an \emph{Analysis Window}.
+    \item[3.] Choose a \emph{Propagation Window} over which SGP4 should
+      be ``good enough''.
+    \item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.
+    \item[5a.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.
+    \item[5b.] Compute covariance statistics from gathered samples.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Example Results}
+  \begin{center}
+    \includegraphics[scale=0.4]{images/fig4.png}
+  \end{center}
+\end{frame}
+
+\subsection{Subtleties}
+\begin{frame}{Reference Frame}
+
+  \begin{center}
+    \includegraphics[scale=0.3]{images/error_ellipses.jpg}
+  \end{center}
+  
+  Residuals naturally oriented along satellite motion (RIC frame).
+\end{frame}
+
+\begin{frame}{Reference State}
+  Using TLEs at epoch as reference states limits our pool of residual
+  samples. What if we merged all our TLEs together into a reference state, a la
+  sample means?
+
+  \pause
+  
+  \[ x_\text{ref} = \sum{\bar{w_i} x_i} \]
+
+  \pause
+
+  $x_i$ is less reliable the further from $t_\text{ref}$ it is. Choose $w_i$
+  accordingly
+  
+  \[ w_i = \frac{1}{\text{age}^2} \]
+  
+  \pause
+
+  Why inverse square? No theoretical justification provided.
+\end{frame}
+
+\begin{frame}{Propagation Asymmetry}
+
+  Intuition: forward and backward propagation should have similar
+  error growth. \pause Wrong! \pause Wrong, wrong, \emph{\textbf{WRONG}}!
+
+  \pause
+
+  \begin{center}
+    \includegraphics[scale=0.27]{images/HOTFit.png}
+  \end{center}
+  
+  \pause
+  
+  In fact TLEs may not be most accurate at epoch!
+\end{frame}
+
+\begin{frame}{Error Model}
+  Recall: final step of differencing protocol was to fit an error estimating
+function $\hat{\epsilon}(\Delta t)$.\newline \pause
+
+  Polynomials? Rationals? ANNs?\newline \pause 
+
+  Just interpolating, data is ``well-behaved'' -- low order polynomial is fine.
+\end{frame}
+
+\begin{frame}{Outlier Handling: Rejection Multipliers}
+  TLEs are crap sometimes -- need to manage outliers. \pause Iterative procedure:
+
+  \begin{enumerate}
+  \item Calculate sample mean, sample deviation $\epsilon_i$s
+  \item Discard if too many deviations away from mean. Common admissibility
+    range $r_\text{max}$ is somewhere between 3 and 6.
+  \item If discard, back to top.
+  \end{enumerate}\pause
+
+  Commonly effective, but $r_\text{max}$ is a nuisance hyper-parameter.
+\end{frame}
+
+\begin{frame}{Outlier Handling: Weighting}
+  What if we downweighted dubious samples instead of tossing them entirely? \pause
+
+  \begin{enumerate}
+  \item Perform least squares fit.
+  \item Compute new weights from fit residuals (e.g., via bi-square weight function).
+  \item Repeat until convergence or loss of patience.
+  \end{enumerate}\pause
+  
+  WLSQ and Bi-square weight function are topics for another day, but in summary:
+  \begin{enumerate}
+  \item WLSQ minimizes a weighted L2 norm.
+  \item Bi-square weight gives more weight to well-modeled obs and less to
+    poorly modeled obs.
+  \end{enumerate}  
+\end{frame}
+
+\subsection{Experimental Verification}
+
+\begin{frame}{GNSS}
+  \begin{center}
+    \includegraphics[scale=0.4]{images/fig3.png}
+  \end{center}
+
+  GNSS readings (blue) provide truth baseline for evaluation.
+\end{frame}
+
+\begin{frame}{In-Track}
+  \begin{center}
+    \includegraphics[scale=0.4]{images/fig4.png}
+  \end{center}
+
+  As expected, in-track error dominates.
+\end{frame}
+
+\begin{frame}{Back To Covariances}
+
+  \begin{center}
+    \includegraphics[scale=0.4]{images/fig9.png}
+  \end{center}
+\end{frame}
+
+
+%% Q&A and Further reading.
+\miniframesoff
+\section*{}
+\begin{frame}{References and Further Reading}
+  \AtNextBibliography{\tiny}
+  \nocite{*}
+  \printbibliography
+\end{frame}
+
+\begin{frame}{Self Link}
+  The source for this presentation is hosted at
+\url{https://github.com/alan-christopher/edu/tle-differencing}.
+
+\end{frame}
+\end{document}
