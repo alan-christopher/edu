@@ -258,7 +258,7 @@ sorting=ynt,
 
 \begin{frame}{Differencing}
   \begin{center}
-    TODO: fig 1 here.
+    \includegraphics[scale=0.32]{images/fig1.png}
   \end{center}
 
   \begin{enumerate}
@@ -268,7 +268,8 @@ sorting=ynt,
     \only<3>{\item[3.] Choose a \emph{Propagation Window} over which SGP4 should
       be ``good enough''.}
     \only<4>{\item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.}
-    \only<5>{\item[5.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.}
+    \only<5>{\item[5a.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.}
+    \only<5>{\item[5b.] Compute covariance statistics from gathered samples.}
   \end{enumerate}
 \end{frame}
 
@@ -281,14 +282,15 @@ sorting=ynt,
     \item[3.] Choose a \emph{Propagation Window} over which SGP4 should
       be ``good enough''.
     \item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.
-    \item[5.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.
+    \item[5a.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.
+    \item[5b.] Compute covariance statistics from gathered samples.
   \end{enumerate}
 \end{frame}
 
 
-\begin{frame}{Example Output}
+\begin{frame}{Example Results}
   \begin{center}
-    TODO: fig 4 here
+    \includegraphics[scale=0.4]{images/fig4.png}
   \end{center}
 \end{frame}
 
@@ -331,7 +333,7 @@ sorting=ynt,
   \pause
 
   \begin{center}
-    TODO: HOT fit image.
+    \includegraphics[scale=0.27]{images/HOTFit.png}
   \end{center}
   
   \pause
@@ -382,7 +384,7 @@ function $\hat{\epsilon}(\Delta t)$.\newline \pause
 
 \begin{frame}{GNSS}
   \begin{center}
-    TODO: fig 3 here.
+    \includegraphics[scale=0.4]{images/fig3.png}
   \end{center}
 
   GNSS readings (blue) provide truth baseline for evaluation.
@@ -390,7 +392,7 @@ function $\hat{\epsilon}(\Delta t)$.\newline \pause
 
 \begin{frame}{In-Track}
   \begin{center}
-    TODO: fig 4 here.
+    \includegraphics[scale=0.4]{images/fig4.png}
   \end{center}
 
   As expected, in-track error dominates.
@@ -399,10 +401,8 @@ function $\hat{\epsilon}(\Delta t)$.\newline \pause
 \begin{frame}{Back To Covariances}
 
   \begin{center}
-    TODO: fig 9 here.
+    \includegraphics[scale=0.4]{images/fig9.png}
   \end{center}
-  
-  WD reference state generation is sufficient for covariance estimation.
 \end{frame}
 
 
