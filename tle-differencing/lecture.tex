@@ -255,12 +255,156 @@ sorting=ynt,
 
 \section{TLE Differencing}
 \subsection{General Approach}
+
+\begin{frame}{Differencing}
+  \begin{center}
+    TODO: fig 1 here.
+  \end{center}
+
+  \begin{enumerate}
+    \only<1>{\item[1.] Select an RSO's TLE history to examine.}
+    \only<2>{\item[2.] Assume residuals $\epsilon$ are consistently distributed
+      over an \emph{Analysis Window}.}
+    \only<3>{\item[3.] Choose a \emph{Propagation Window} over which SGP4 should
+      be ``good enough''.}
+    \only<4>{\item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.}
+    \only<5>{\item[5.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.}
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Differencing Recapitulated}
+  \begin{enumerate}
+    \item[1.] Select an RSO's TLE history to examine.    
+    \item[2.] Assume residuals $\epsilon$ are consistently distributed
+      over an \emph{Analysis Window}.
+    \item[3.] Choose a \emph{Propagation Window} over which SGP4 should
+      be ``good enough''.
+    \item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.
+    \item[5.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Example Output}
+  \begin{center}
+    TODO: fig 4 here
+  \end{center}
+\end{frame}
+
 \subsection{Subtleties}
+\begin{frame}{Reference Frame}
+
+  \begin{center}
+    \includegraphics[scale=0.3]{images/error_ellipses.jpg}
+  \end{center}
+  
+  Residuals naturally oriented along satellite motion (RIC frame).
+\end{frame}
+
+\begin{frame}{Reference State}
+  Using TLEs at epoch as reference states limits our pool of residual
+  samples. What if we merged all our TLEs together into a reference state, a la
+  sample means?
+
+  \pause
+  
+  \[ x_\text{ref} = \sum{\bar{w_i} x_i} \]
+
+  \pause
+
+  $x_i$ is less reliable the further from $t_\text{ref}$ it is. Choose $w_i$
+  accordingly
+  
+  \[ w_i = \frac{1}{\text{age}^2} \]
+  
+  \pause
+
+  Why inverse square? No theoretical justification provided.
+\end{frame}
+
+\begin{frame}{Propagation Asymmetry}
+
+  Intuition: forward and backward propagation should have similar
+  error growth. \pause Wrong! \pause Wrong, wrong, \emph{\textbf{WRONG}}!
+
+  \pause
+
+  \begin{center}
+    TODO: HOT fit image.
+  \end{center}
+  
+  \pause
+  
+  In fact TLEs may not be most accurate at epoch!
+\end{frame}
+
+\begin{frame}{Error Model}
+  Recall: final step of differencing protocol was to fit an error estimating
+function $\hat{\epsilon}(\Delta t)$.\newline \pause
+
+  Polynomials? Rationals? ANNs?\newline \pause 
+
+  Just interpolating, data is ``well-behaved'' -- low order polynomial is fine.
+\end{frame}
+
+\begin{frame}{Outlier Handling: Rejection Multipliers}
+  TLEs are crap sometimes -- need to manage outliers. \pause Iterative procedure:
+
+  \begin{enumerate}
+  \item Calculate sample mean, sample deviation $\epsilon_i$s
+  \item Discard if too many deviations away from mean. Common admissibility
+    range $r_\text{max}$ is somewhere between 3 and 6.
+  \item If discard, back to top.
+  \end{enumerate}\pause
+
+  Commonly effective, but $r_\text{max}$ is a nuisance hyper-parameter.
+\end{frame}
+
+\begin{frame}{Outlier Handling: Weighting}
+  What if we downweighted dubious samples instead of tossing them entirely? \pause
+
+  \begin{enumerate}
+  \item Perform least squares fit.
+  \item Compute new weights from fit residuals (e.g., via bi-square weight function).
+  \item Repeat until convergence or loss of patience.
+  \end{enumerate}\pause
+  
+  WLSQ and Bi-square weight function are topics for another day, but in summary:
+  \begin{enumerate}
+  \item WLSQ minimizes a weighted L2 norm.
+  \item Bi-square weight gives more weight to well-modeled obs and less to
+    poorly modeled obs.
+  \end{enumerate}  
+\end{frame}
+
 \subsection{Experimental Verification}
 
-\begin{frame}{TODO}
-  TODO
+\begin{frame}{GNSS}
+  \begin{center}
+    TODO: fig 3 here.
+  \end{center}
+
+  GNSS readings (blue) provide truth baseline for evaluation.
 \end{frame}
+
+\begin{frame}{In-Track}
+  \begin{center}
+    TODO: fig 4 here.
+  \end{center}
+
+  As expected, in-track error dominates.
+\end{frame}
+
+\begin{frame}{Back To Covariances}
+
+  \begin{center}
+    TODO: fig 9 here.
+  \end{center}
+  
+  WD reference state generation is sufficient for covariance estimation.
+\end{frame}
+
 
 %% Q&A and Further reading.
 \miniframesoff
