@@ -369,10 +369,10 @@ function $\hat{\epsilon}(\Delta t)$.\newline \pause
   TLEs are crap sometimes -- need to manage outliers. \pause Iterative procedure:
 
   \begin{enumerate}
-  \item Calculate sample mean, sample deviation $\epsilon_i$s
-  \item Discard if too many deviations away from mean. Common admissibility
-    range $r_\text{max}$ is somewhere between 3 and 6.
-  \item If discard, back to top.
+  \item Perform least squares fit.
+  \item Discard observations too many deviations away from prediction. Common
+    admissibility range $r_\text{max}$ is somewhere between 3 and 6.
+  \item Repeat until no discards or no more patience.
   \end{enumerate}\pause
 
   Commonly effective, but $r_\text{max}$ is a nuisance hyper-parameter.
