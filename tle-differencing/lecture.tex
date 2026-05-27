@@ -114,7 +114,7 @@ sorting=ynt,
         \hline\hline
 
         $i$ & \multirow{3}{*}{Orientation} \\
-        $\Omega$ \\ 
+        $\Omega$ \\
         $\omega$ \\ \hline
         $e$ & \multirow{2}{*}{Shape} \\
         $a$   \\ \hline
@@ -135,8 +135,8 @@ sorting=ynt,
   \end{center}
 
   Kepler elements result in busy diagrams, but can be quite handy. E.g., $i$ and
-  $\Omega$ directly define the direction of orbital momentum. 
-  
+  $\Omega$ directly define the direction of orbital momentum.
+
 \end{frame}
 
 
@@ -213,7 +213,7 @@ sorting=ynt,
   \begin{center}
     \includegraphics[scale=0.6]{images/SecularPeriodic.png}
   \end{center}
-  
+
   Could we ``average'' the high-frequency perturbations away somehow?
 \end{frame}
 
@@ -232,7 +232,7 @@ sorting=ynt,
   \begin{itemize}
   \item SGP4 catches only the biggest perturbations.
   \item Liable to accumulate kilometers of error within an orbital period.
-  \end{itemize}  
+  \end{itemize}
 \end{frame}
 
 \begin{frame}{Error at Epoch}
@@ -268,25 +268,39 @@ sorting=ynt,
     \only<3>{\item[3.] Choose a \emph{Propagation Window} over which SGP4 should
       be ``good enough''.}
     \only<4>{\item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.}
-    \only<5>{\item[5a.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.}
-    \only<5>{\item[5b.] Compute covariance statistics from gathered samples.}
+    \only<5>{\item[5.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.}
   \end{enumerate}
 \end{frame}
 
 
 \begin{frame}{Differencing Recapitulated}
   \begin{enumerate}
-    \item[1.] Select an RSO's TLE history to examine.    
+    \item[1.] Select an RSO's TLE history to examine.
     \item[2.] Assume residuals $\epsilon$ are consistently distributed
       over an \emph{Analysis Window}.
     \item[3.] Choose a \emph{Propagation Window} over which SGP4 should
       be ``good enough''.
     \item[4.] Compute $\epsilon(\Delta t)$ samples by computing pairwise differences against reference TLEs.
-    \item[5a.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.
-    \item[5b.] Compute covariance statistics from gathered samples.
+    \item[5.] Fit function $\hat{\epsilon}(\Delta t)$ to gathered samples.
   \end{enumerate}
 \end{frame}
 
+\begin{frame}{Fit to Variance}
+  Recall: standard OLS model
+
+  \[ y = X\beta + \epsilon, \epsilon \sim \mathcal{N}(0, \sigma^2I) \]
+
+  \pause
+
+  Best fit solution:
+
+  \[ \hat{\beta} = (X^TX)^{-1}X^Ty \]
+
+  \pause
+  Prediction error spread:
+
+  \[ \text{Var}(y_\text{new} - x_\text{new}\beta) = \sigma^2 + \sigma^2x_\text{new}(X^TX)^{-1}x_\text{new}^T  \]
+\end{frame}
 
 \begin{frame}{Example Results}
   \begin{center}
@@ -300,7 +314,7 @@ sorting=ynt,
   \begin{center}
     \includegraphics[scale=0.3]{images/error_ellipses.jpg}
   \end{center}
-  
+
   Residuals naturally oriented along satellite motion (RIC frame).
 \end{frame}
 
@@ -310,16 +324,16 @@ sorting=ynt,
   sample means?
 
   \pause
-  
+
   \[ x_\text{ref} = \sum{\bar{w_i} x_i} \]
 
   \pause
 
   $x_i$ is less reliable the further from $t_\text{ref}$ it is. Choose $w_i$
   accordingly
-  
+
   \[ w_i = \frac{1}{\text{age}^2} \]
-  
+
   \pause
 
   Why inverse square? No theoretical justification provided.
@@ -335,9 +349,9 @@ sorting=ynt,
   \begin{center}
     \includegraphics[scale=0.27]{images/HOTFit.png}
   \end{center}
-  
+
   \pause
-  
+
   In fact TLEs may not be most accurate at epoch!
 \end{frame}
 
@@ -345,9 +359,10 @@ sorting=ynt,
   Recall: final step of differencing protocol was to fit an error estimating
 function $\hat{\epsilon}(\Delta t)$.\newline \pause
 
-  Polynomials? Rationals? ANNs?\newline \pause 
+  Polynomials? Rationals? ANNs?\newline \pause
 
-  Just interpolating, data is ``well-behaved'' -- low order polynomial is fine.
+  Just interpolating, data is ``well-behaved'' -- low order polynomial is
+  fine. Plus, interacts well with OLS.
 \end{frame}
 
 \begin{frame}{Outlier Handling: Rejection Multipliers}
@@ -371,13 +386,13 @@ function $\hat{\epsilon}(\Delta t)$.\newline \pause
   \item Compute new weights from fit residuals (e.g., via bi-square weight function).
   \item Repeat until convergence or loss of patience.
   \end{enumerate}\pause
-  
+
   WLSQ and Bi-square weight function are topics for another day, but in summary:
   \begin{enumerate}
   \item WLSQ minimizes a weighted L2 norm.
   \item Bi-square weight gives more weight to well-modeled obs and less to
     poorly modeled obs.
-  \end{enumerate}  
+  \end{enumerate}
 \end{frame}
 
 \subsection{Experimental Verification}
@@ -399,12 +414,13 @@ function $\hat{\epsilon}(\Delta t)$.\newline \pause
 \end{frame}
 
 \begin{frame}{Back To Covariances}
-
   \begin{center}
-    \includegraphics[scale=0.4]{images/fig9.png}
+    \includegraphics[scale=0.35]{images/fig9.png}
   \end{center}
-\end{frame}
 
+  Independent polyfits do not covariance compute. But combined with correlations
+  from raw sample statistics\ldots
+\end{frame}
 
 %% Q&A and Further reading.
 \miniframesoff
